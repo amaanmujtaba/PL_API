@@ -64,8 +64,8 @@ export default function MainBody() {
             <tr>
                 <th className="px-4 py-2">Name</th>
                 <th className="px-4 py-2">Team</th>
-                <th className="px-4 py-2">Expected Points (Next GW)</th>
-                <th className="px-4 py-2">Actual Points (Last GW)</th>
+                <th className="px-4 py-2">Exp Pts (Next GW)</th>
+                <th className="px-4 py-2">GW Pts (Last GW)</th>
             </tr>
         </thead>
         <tbody>
