@@ -29,13 +29,16 @@ export default function MainBody() {
     const [players, setPlayers] = useState([]);
     const [filteredPlayers, setFilteredPlayers] = useState([]);
     const [gwFixtures, setGWFFixtures] = useState([]);
-
+    const [shouldHide , setShouldHide] = useState(true);
 
     let fixtures = {};
     let currFixtures = {};
 
     const GW = 25; //ENTER GAMEWEEK HERE!
 
+
+
+    //Get PLayer info
     useEffect(() => {
     async function fetchPlayers() {
         try {
@@ -60,6 +63,9 @@ export default function MainBody() {
 
     //console.log(filteredPlayers[25]);
 
+
+
+    //Fixtures
     useEffect(() => {
         async function fetchFixtureData() {
             try {
@@ -160,46 +166,60 @@ export default function MainBody() {
     }, []);
 
 
-    
+    function showPlayers(){
+        setShouldHide(false);
+    }
     
 
     
     return (
     <div className="container mx-auto py-8">
         <h2 className="text-2xl font-bold mb-4">Fantasy Premier League Players</h2>
-        <table className="table-auto">
-        <thead>
-            <tr>
-                <th className="px-4 py-2">Name</th>
-                <th className="px-4 py-2">Team</th>
-                <th className="px-4 py-2">Exp Pts (Next GW)</th>
+            <div className="flex space-x-4">
+                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        onClick={showPlayers}>
+                    Top 20 Players
+                </button>
+                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Enter Players
+                </button>
+            </div>
+           {shouldHide ? null :(
+            <div className = "bg-slate-600 hide mt-5">
+                <table className="table-auto">
+                <thead>
+                    <tr>
+                        <th className="px-4 py-2">Name</th>
+                        <th className="px-4 py-2">Team</th>
+                        <th className="px-4 py-2">Exp Pts (Next GW)</th>
 
-                <th className="px-4 py-2">Next fixtures</th>
-            </tr>
-        </thead>
-        <tbody>
-                {filteredPlayers
-                .sort((a, b) => b.ep_next - a.ep_next) // Sort in decreasing order of expected points
-                .map(player => (
-                <tr key={player.id}>
-                    <td className="border px-4 py-2">{player.first_name} {player.second_name}</td>
-                    <td className="border px-4 py-2">{teamMapping[player.team]}</td>
-                    <td className="border px-4 py-2">{player.ep_next}</td>
-                    <td className="border px-4 py-2">
-                        {gwFixtures && gwFixtures[player.team] ? (
-                            <ul>
-                            {gwFixtures[player.team].map((fixture, index) => (
-                                <ListElement fixture = {fixture} index= {index} />
-                            ))}
-                            </ul>
-                        ) : (
-                            "wait"
-                        )}
-</td>
-                </tr>
-            ))}
-        </tbody>
-    </table>
+                        <th className="px-4 py-2">Next fixtures</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        {filteredPlayers
+                        .sort((a, b) => b.ep_next - a.ep_next) // Sort in decreasing order of expected points
+                        .map(player => (
+                        <tr key={player.id}>
+                            <td className="border px-4 py-2">{player.first_name} {player.second_name}</td>
+                            <td className="border px-4 py-2">{teamMapping[player.team]}</td>
+                            <td className="border px-4 py-2">{player.ep_next}</td>
+                            <td className="border px-4 py-2">
+                                {gwFixtures && gwFixtures[player.team] ? (
+                                    <ul>
+                                    {gwFixtures[player.team].map((fixture, index) => (
+                                        <ListElement fixture = {fixture} index= {index} />
+                                    ))}
+                                    </ul>
+                                ) : (
+                                    "wait"
+                                )}
+        </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>)}
     </div>
     );
 }
