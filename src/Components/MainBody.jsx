@@ -30,6 +30,7 @@ export default function MainBody() {
     const [filteredPlayers, setFilteredPlayers] = useState([]);
     const [gwFixtures, setGWFFixtures] = useState([]);
     const [shouldHide , setShouldHide] = useState(true);
+    const [showEnterPlayer, setShowEnterPlayer] = useState(true);
 
     let fixtures = {};
     let currFixtures = {};
@@ -184,6 +185,20 @@ export default function MainBody() {
                     Enter Players
                 </button>
             </div>
+            {showEnterPlayer && (
+                <div className="flex items-center justify-center mt-4 bg-red-500">
+                    <div className="flex w-full justify-center">
+                        <input
+                            type="text"
+                            placeholder="Enter player name here"
+                            className="w-3/4 border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                        <button className="right-0 top-0 bottom-0 px-3 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
+                            Search
+                        </button>
+                    </div>
+                </div>
+            )}
            {shouldHide ? null :(
             <div className = "bg-slate-600 hide mt-5">
                 <table className="table-auto">
