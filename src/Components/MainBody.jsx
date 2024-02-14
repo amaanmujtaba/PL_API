@@ -2,38 +2,39 @@ import React, { useState, useEffect } from 'react';
 import ListElement from './ListElement';
 
 const teamMapping = {
-1: "Arsenal",
-2: "Aston Villa FC",
-3: "Bournemouth AFC",
-4: "Brentford",
-5: "Brighton & Hove Albion",
-6: "Burnley FC",
-7: "Chelsea FC",
-8: "Crystal Palace FC",
-9: "Everton FC",
-10: "Fulham FC",
-11: "Liverpool FC",
-12: "Luton Town FC",
-13: "Manchester City FC",
-14: "Manchester United FC",
-15: "Newcastle United FC",
-16: "Nottingham Forest FC",
-17: "Sheffield United FC",
-18: "Tottenham Hotspur FC",
-19: "West Ham United FC",
-20: "Wolverhampton Wanderers"
+    1: "ARS",
+    2: "AVL",
+    3: "BOU",
+    4: "BRE",
+    5: "BHA",
+    6: "BUR",
+    7: "CHE",
+    8: "CRY",
+    9: "EVE",
+    10: "FUL",
+    11: "LIV",
+    12: "LUT",
+    13: "MCI",
+    14: "MUN",
+    15: "NEW",
+    16: "NOT",
+    17: "SHU",
+    18: "TOT",
+    19: "WHU",
+    20: "WOL"
 };
-
 
 export default function MainBody() {
     const [players, setPlayers] = useState([]);
     const [filteredPlayers, setFilteredPlayers] = useState([]);
     const [gwFixtures, setGWFFixtures] = useState([]);
     const [shouldHide , setShouldHide] = useState(true);
-    const [showEnterPlayer, setShowEnterPlayer] = useState(true);
+    const [showEnterPlayer, setShowEnterPlayer] = useState(false);
+    const[nextFour, setNextFour] = useState([]);
 
     let fixtures = {};
     let currFixtures = {};
+    let next4Fixtures = {};
 
     const GW = 25; //ENTER GAMEWEEK HERE!
 
@@ -58,7 +59,38 @@ export default function MainBody() {
     useEffect(() => {
         if (players.length > 0) {
             const filteredPlayers = players.filter(player => player.chance_of_playing_next_round === 100 && player.ep_next>6);
+            
+            filteredPlayers.forEach(player => {
+                const positionId = player.element_type;
+                let position = '';
+
+                switch (positionId) {
+                    case 1:
+                        position = 'G';
+                        break;
+                    case 2:
+                        position = 'D';
+                        break;
+                    case 3:
+                        position = 'M';
+                        break;
+                    case 4:
+                        position = 'F';
+                        break;
+                    default:
+                        position = 'U';
+                        break;
+                }
+
+// Add the position to the player object
+                player.position = position;
+                
+            }); 
             setFilteredPlayers(filteredPlayers);
+            // console.log(filteredPlayers[25]);
+            // console.log(filteredPlayers[1]);
+
+
         }
     }, [players]); // Run whenever players state changes
 
@@ -99,22 +131,48 @@ export default function MainBody() {
                 
                 for(let i = 1; i<=20; i++){
                     let res = [];
+                    let nextFixtures = [[],[],[],[]];
 
-                    for (let j=0; j<=37; j++){
-                        const element = fixtures[j]
-                    }
+                    // for (let j=0; j<=37; j++){
+                    //     const element = fixtures[j]
+                    // }
                     fixtures[i].forEach((element,index) => {
                         // console.log("-----", element);
-                        if(element[0]===GW && index<38){
-                            const app = [element[1], element[2]];
-                            // console.log(app);
-                            res.push(app);
-                        }    
-                    });
-                    currFixtures[i] = res;
-                }
+                        if(index<38){
+                            if(element[0]===GW){
+                                const app = [element[1], element[2]];
+                                // console.log(app);
+                                res.push(app);
+                            }    
 
-                console.log(currFixtures)
+                            if(element[0]=== GW+1){
+                                const app = [element[1], element[2]];
+                                // console.log(app);
+                                nextFixtures[0].push(app);
+                            }
+                            if(element[0]=== GW+2){
+                                const app = [element[1], element[2]];
+                                // console.log(app);
+                                nextFixtures[1].push(app);
+                            }
+                            if(element[0]=== GW+3){
+                                const app = [element[1], element[2]];
+                                // console.log(app);
+                                nextFixtures[2].push(app);
+                            }
+                            if(element[0]=== GW+4){
+                                const app = [element[1], element[2]];
+                                // console.log(app);
+                                nextFixtures[3].push(app);
+                            }
+                            //console.log("Next fixtures", nextFixtures)
+                    }});
+                    currFixtures[i] = res;
+                    next4Fixtures[i] = nextFixtures
+                
+            }
+                console.log("-------", next4Fixtures)
+                setNextFour(next4Fixtures);
                 setGWFFixtures(currFixtures);
                     /*
                     if (homeTeam && awayTeam) {
@@ -170,8 +228,14 @@ export default function MainBody() {
     function showPlayers(){
         setShouldHide(false);
     }
+
+    function clickShowPlayer(){
+        setFilteredPlayers([])
+        setShowEnterPlayer(true);
+    }
     
 
+    //nextFour[1].map((fixture, index) => (console.log("++", fixture)));
     
     return (
     <div className="container mx-auto py-8">
@@ -181,12 +245,13 @@ export default function MainBody() {
                         onClick={showPlayers}>
                     Top 20 Players
                 </button>
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        onClick={clickShowPlayer}>
                     Enter Players
                 </button>
             </div>
             {showEnterPlayer && (
-                <div className="flex items-center justify-center mt-4 bg-red-500">
+                <div className="flex items-center justify-center mt-4">
                     <div className="flex w-full justify-center">
                         <input
                             type="text"
@@ -206,9 +271,13 @@ export default function MainBody() {
                     <tr>
                         <th className="px-4 py-2">Name</th>
                         <th className="px-4 py-2">Team</th>
-                        <th className="px-4 py-2">Exp Pts (Next GW)</th>
+                        <th className="px-4 py-2">Pos</th>
 
-                        <th className="px-4 py-2">Next fixtures</th>
+                        <th className="px-4 py-2">Exp Pts</th>
+
+                        <th className="px-4 py-2">GW {GW}</th>
+                        <th className="px-4 py-2">Next 4 Gameweeks</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -218,18 +287,38 @@ export default function MainBody() {
                         <tr key={player.id}>
                             <td className="border px-4 py-2">{player.first_name} {player.second_name}</td>
                             <td className="border px-4 py-2">{teamMapping[player.team]}</td>
+                            <td className="border px-4 py-2">{player.position}</td>
                             <td className="border px-4 py-2">{player.ep_next}</td>
+                            
+
                             <td className="border px-4 py-2">
                                 {gwFixtures && gwFixtures[player.team] ? (
                                     <ul>
                                     {gwFixtures[player.team].map((fixture, index) => (
-                                        <ListElement fixture = {fixture} index= {index} />
+                                        <ListElement fixture = {fixture} index= {index} dir = "col" />
                                     ))}
                                     </ul>
                                 ) : (
                                     "wait"
                                 )}
-        </td>
+                                </td>
+                                <td className="border px-4 py-2">
+                                                    {nextFour && nextFour[player.team] ? (
+                        <ul className='flex flex-row'>
+                            {nextFour[player.team].map((fixture, index) => (
+                                <React.Fragment key={index}>
+                                    {fixture.map((f, i) => (
+                                        <ListElement fixture={f} index={i*Math.random()} dir ="row" />
+                                        
+                                    ))}
+                                </React.Fragment>
+                            ))}
+                        </ul>
+                    ) : (
+                        "wait"
+                    )}
+                                </td>
+                            
                         </tr>
                     ))}
                 </tbody>
