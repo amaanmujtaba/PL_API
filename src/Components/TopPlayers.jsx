@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ListElement from './ListElement';
+import DisplayFixtures from './DisplayFixtures';
 import { teamMapping, GW } from '../data';
 
 
@@ -41,23 +42,21 @@ export default function TopPlayers({ filteredPlayers, gwFixtures, nextFour }){
                     ) : (
                         "wait"
                     )}
+
+
                     </td>
                     <td className="border px-4 py-2">
-                                        {nextFour && nextFour[player.team] ? (
-            <ul className='flex flex-row'>
-                {nextFour[player.team].map((fixture, index) => (
-                    <React.Fragment key={index}>
-                        {fixture.map((f, i) => (
-                            <ListElement fixture={f} index={i*Math.random()} dir ="row" />
-                            
-                        ))}
-                    </React.Fragment>
-                ))}
-            </ul>
-        ) : (
-            "wait"
-        )}
-                    </td>
+                                <ul className="flex flex-row">
+                                    {nextFour[player.team].map((fixtures, index) => (
+                                        <DisplayFixtures fixtures = {fixtures} />
+                                                
+                    ))}
+                
+                                </ul>
+                            </td>
+
+
+                
                 
             </tr>
         ))}
