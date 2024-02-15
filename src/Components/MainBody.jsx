@@ -1,28 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ListElement from './ListElement';
-
-const teamMapping = {
-    1: "ARS",
-    2: "AVL",
-    3: "BOU",
-    4: "BRE",
-    5: "BHA",
-    6: "BUR",
-    7: "CHE",
-    8: "CRY",
-    9: "EVE",
-    10: "FUL",
-    11: "LIV",
-    12: "LUT",
-    13: "MCI",
-    14: "MUN",
-    15: "NEW",
-    16: "NOT",
-    17: "SHU",
-    18: "TOT",
-    19: "WHU",
-    20: "WOL"
-};
+import TopPlayers from './TopPlayers';
+import { teamMapping, GW } from '../data';
+import ShowTeam from './ShowTeam';
 
 export default function MainBody() {
     const [players, setPlayers] = useState([]);
@@ -30,7 +10,9 @@ export default function MainBody() {
     const [gwFixtures, setGWFFixtures] = useState([]);
     const [shouldHide , setShouldHide] = useState(true);
     const [showEnterPlayer, setShowEnterPlayer] = useState(false);
-    const[nextFour, setNextFour] = useState([]);
+    const [nextFour, setNextFour] = useState([]);
+    const [showTopPlayers, setShowTopPlayers] = useState(false);
+    const [showTeams, setShowTeams] = useState(false);
 
     let fixtures = {};
     let currFixtures = {};
@@ -168,6 +150,11 @@ export default function MainBody() {
                             //console.log("Next fixtures", nextFixtures)
                     }});
                     currFixtures[i] = res;
+                    for(let k = 0; k<=3; k++){
+                        if(nextFixtures[k].length === 0){
+                            nextFixtures[k].push(["-",0]);
+                        }
+                    }
                     next4Fixtures[i] = nextFixtures
                 
             }
@@ -225,13 +212,26 @@ export default function MainBody() {
     }, []);
 
 
+
     function showPlayers(){
         setShouldHide(false);
     }
 
+    function clickShowTopPlayers(){
+        setShowTopPlayers(true);
+        setShowEnterPlayer(false);
+        setShowTeams(false);
+    }
     function clickShowPlayer(){
-        setFilteredPlayers([])
+        setShowTopPlayers(false);
         setShowEnterPlayer(true);
+        setShowTeams(false);
+
+    }
+    function clickShowTeams(){
+        setShowTopPlayers(false);
+        setShowEnterPlayer(false);
+        setShowTeams(true)
     }
     
 
@@ -241,8 +241,14 @@ export default function MainBody() {
     <div className="container mx-auto py-8">
         <h2 className="text-2xl font-bold mb-4">Fantasy Premier League Players</h2>
             <div className="flex space-x-4">
+
                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                        onClick={showPlayers}>
+                        onClick={clickShowTeams}>
+                    Team Information
+                </button>
+
+                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        onClick={clickShowTopPlayers}>
                     Top 20 Players
                 </button>
                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -264,66 +270,14 @@ export default function MainBody() {
                     </div>
                 </div>
             )}
-           {shouldHide ? null :(
-            <div className = "bg-slate-600 hide mt-5">
-                <table className="table-auto">
-                <thead>
-                    <tr>
-                        <th className="px-4 py-2">Name</th>
-                        <th className="px-4 py-2">Team</th>
-                        <th className="px-4 py-2">Pos</th>
 
-                        <th className="px-4 py-2">Exp Pts</th>
-
-                        <th className="px-4 py-2">GW {GW}</th>
-                        <th className="px-4 py-2">Next 4 Gameweeks</th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                        {filteredPlayers
-                        .sort((a, b) => b.ep_next - a.ep_next) // Sort in decreasing order of expected points
-                        .map(player => (
-                        <tr key={player.id}>
-                            <td className="border px-4 py-2">{player.first_name} {player.second_name}</td>
-                            <td className="border px-4 py-2">{teamMapping[player.team]}</td>
-                            <td className="border px-4 py-2">{player.position}</td>
-                            <td className="border px-4 py-2">{player.ep_next}</td>
-                            
-
-                            <td className="border px-4 py-2">
-                                {gwFixtures && gwFixtures[player.team] ? (
-                                    <ul>
-                                    {gwFixtures[player.team].map((fixture, index) => (
-                                        <ListElement fixture = {fixture} index= {index} dir = "col" />
-                                    ))}
-                                    </ul>
-                                ) : (
-                                    "wait"
-                                )}
-                                </td>
-                                <td className="border px-4 py-2">
-                                                    {nextFour && nextFour[player.team] ? (
-                        <ul className='flex flex-row'>
-                            {nextFour[player.team].map((fixture, index) => (
-                                <React.Fragment key={index}>
-                                    {fixture.map((f, i) => (
-                                        <ListElement fixture={f} index={i*Math.random()} dir ="row" />
-                                        
-                                    ))}
-                                </React.Fragment>
-                            ))}
-                        </ul>
-                    ) : (
-                        "wait"
-                    )}
-                                </td>
-                            
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>)}
+            {/* function TopPlayers({ filteredPlayers, gwFixtures, nextFour }) */}
+           {showTopPlayers ? (
+            <TopPlayers filteredPlayers={filteredPlayers} gwFixtures={gwFixtures} nextFour={nextFour} />
+           ): null}
+           {showTeams ? (
+           <ShowTeam nextFour = {nextFour} />
+           ) : null}
     </div>
     );
 }
