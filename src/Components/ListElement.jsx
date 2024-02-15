@@ -6,6 +6,9 @@ export default function ListElement( { fixture , index , dir }){
     if(diff === 2){
         css+= " bg-green-400";
     }
+    else if(diff ===0){
+        css += " bg-slate-100"
+    }
     else if(diff===3){
         css += " bg-slate-400"
     }
