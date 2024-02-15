@@ -276,7 +276,7 @@ export default function MainBody() {
             <TopPlayers filteredPlayers={filteredPlayers} gwFixtures={gwFixtures} nextFour={nextFour} />
            ): null}
            {showTeams ? (
-           <ShowTeam nextFour = {nextFour} />
+           <ShowTeam nextFour = {nextFour} gwFixtures={gwFixtures} />
            ) : null}
     </div>
     );
