@@ -152,7 +152,7 @@ export default function MainBody() {
                     currFixtures[i] = res;
                     for(let k = 0; k<=3; k++){
                         if(nextFixtures[k].length === 0){
-                            nextFixtures[k].push(["-",0]);
+                            nextFixtures[k].push(["BLK",0]);
                         }
                     }
                     next4Fixtures[i] = nextFixtures
