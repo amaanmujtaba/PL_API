@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ListElement from './ListElement';
+import DisplayFixtures from './DisplayFixtures';
 import { teamMapping, GW } from '../data';
 
 export default function ShowTeam({ nextFour, gwFixtures }) {
@@ -40,9 +41,12 @@ export default function ShowTeam({ nextFour, gwFixtures }) {
       function handleSort(){
 
       }
+      console.log("Area of interest", nextFour);
+      nextFour[12].map((fixtures, index) => (console.log(fixtures)));
 
     //   homes.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
 
+    /* <ListElement key={i} fixture={fixture} index={i} dir="col" /> */
     return (
         <div>
             <p className='text-lg mt-2 text-pretty'> Teams sorted based on easiest fixtures in the next 4GWs</p>
@@ -69,13 +73,10 @@ export default function ShowTeam({ nextFour, gwFixtures }) {
                             <td className="border px-4 py-2">
                                 <ul className="flex flex-row">
                                     {nextFour[teamId].map((fixtures, index) => (
-                                        <React.Fragment key={index}>
-                                            {fixtures.map((fixture, i) => (
+                                        <DisplayFixtures fixtures = {fixtures} />
                                                 
-                                                <ListElement key={i} fixture={fixture} index={i} dir="row" />
-                                            ))}
-                                        </React.Fragment>
-                                    ))}
+                    ))}
+                
                                 </ul>
                             </td>
                             <td className="border px-4 py-2">{avgDiff[teamId]}
