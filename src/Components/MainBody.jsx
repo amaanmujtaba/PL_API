@@ -3,6 +3,7 @@ import ListElement from './ListElement';
 import TopPlayers from './TopPlayers';
 import { teamMapping, GW } from '../data';
 import ShowTeam from './ShowTeam';
+import ShowPlayers from './ShowPlayers';
 
 export default function MainBody() {
     const [players, setPlayers] = useState([]);
@@ -40,9 +41,7 @@ export default function MainBody() {
 
     useEffect(() => {
         if (players.length > 0) {
-            const filteredPlayers = players.filter(player => player.chance_of_playing_next_round === 100 && player.ep_next>6);
-            
-            filteredPlayers.forEach(player => {
+            players.forEach(player => {
                 const positionId = player.element_type;
                 let position = '';
 
@@ -63,11 +62,12 @@ export default function MainBody() {
                         position = 'U';
                         break;
                 }
-
+                
 // Add the position to the player object
                 player.position = position;
                 
             }); 
+            const filteredPlayers = players.filter(player => player.chance_of_playing_next_round === 100 && player.ep_next>6);
             setFilteredPlayers(filteredPlayers);
             // console.log(filteredPlayers[25]);
             // console.log(filteredPlayers[1]);
@@ -257,18 +257,7 @@ export default function MainBody() {
                 </button>
             </div>
             {showEnterPlayer && (
-                <div className="flex items-center justify-center mt-4">
-                    <div className="flex w-full justify-center">
-                        <input
-                            type="text"
-                            placeholder="Enter player name here"
-                            className="w-3/4 border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                        <button className="right-0 top-0 bottom-0 px-3 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
-                            Search
-                        </button>
-                    </div>
-                </div>
+                <ShowPlayers players= {players} gwFixtures={gwFixtures} nextFour ={nextFour}/>
             )}
 
             {/* function TopPlayers({ filteredPlayers, gwFixtures, nextFour }) */}
