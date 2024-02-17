@@ -13,7 +13,7 @@ export default function ShowPlayers({ players, gwFixtures, nextFour }) {
         setSearchQuery(query);
         // Filter players based on search query
         const filteredSuggestions = players.filter(player =>
-            player.web_name.toLowerCase().includes(query.toLowerCase())
+            player.web_name.toLowerCase().includes(query.toLowerCase()) || player.first_name.toLowerCase().includes(query.toLowerCase())
         );
         // Update suggestions
         setSuggestions(filteredSuggestions);
