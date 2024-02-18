@@ -1,8 +1,8 @@
-import { teamMapping, GW } from "../data";
+import { teamMapping } from "../data";
 import ListElement from "./ListElement";
 import DisplayFixtures from "./DisplayFixtures";
 
-export default function DisplayFilteredPlayers({ filteredPlayers, gwFixtures, nextFour}){
+export default function DisplayFilteredPlayers({ GW, filteredPlayers, gwFixtures, nextFour}){
     return(
         <div className = "bg-slate-600 hide mt-5">
             <table className="table-auto">

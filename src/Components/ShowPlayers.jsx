@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import DisplayFilteredPlayers from './DisplayFilteredPlayers';
-import { teamMapping, GW } from '../data';
+import { teamMapping } from '../data';
 
-export default function ShowPlayers({ players, gwFixtures, nextFour }) {
+export default function ShowPlayers({ GW, players, gwFixtures, nextFour }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [suggestions, setSuggestions] = useState([]);
     const [filteredPlayers, setFilteredPlayers] = useState([]);

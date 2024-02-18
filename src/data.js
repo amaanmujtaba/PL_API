@@ -21,6 +21,6 @@ const teamMapping = {
     20: "WOL"
 };
 
-const GW = 25;
+const GW = 26;
 
 export { teamMapping, GW };

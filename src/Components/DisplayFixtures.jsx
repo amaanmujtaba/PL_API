@@ -1,7 +1,7 @@
 import ListElement from "./ListElement";
 
 export default function DisplayFixtures({ fixtures }){
-    console.log("In the Display Fixtures", fixtures);
+    
 
     return(
         <ul>

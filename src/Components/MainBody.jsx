@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import ListElement from './ListElement';
 import TopPlayers from './TopPlayers';
-import { teamMapping, GW } from '../data';
+import { teamMapping } from '../data';
 import ShowTeam from './ShowTeam';
 import ShowPlayers from './ShowPlayers';
 
 export default function MainBody() {
     const [players, setPlayers] = useState([]);
+    const [gwInfo, setGWInfo] = useState([]);
     const [filteredPlayers, setFilteredPlayers] = useState([]);
     const [gwFixtures, setGWFFixtures] = useState([]);
     const [shouldHide , setShouldHide] = useState(true);
@@ -14,12 +15,13 @@ export default function MainBody() {
     const [nextFour, setNextFour] = useState([]);
     const [showTopPlayers, setShowTopPlayers] = useState(false);
     const [showTeams, setShowTeams] = useState(false);
+    const [GW, setGW] = useState(0);
 
     let fixtures = {};
     let currFixtures = {};
     let next4Fixtures = {};
 
-    const GW = 25; //ENTER GAMEWEEK HERE!
+    
 
 
 
@@ -29,8 +31,8 @@ export default function MainBody() {
         try {
         const response = await fetch('https://thingproxy.freeboard.io/fetch/https://fantasy.premierleague.com/api/bootstrap-static/');
         const data = await response.json();
+        setGWInfo(data.events);
         setPlayers(data.elements);
-    
         } catch (error) {
         console.error('Error fetching players:', error);
         }
@@ -38,6 +40,15 @@ export default function MainBody() {
 
     fetchPlayers();
     }, []);
+
+    useEffect(() => {
+        for (let i = 0; i < gwInfo.length; i++) {
+            if (gwInfo[i].finished === false && gwInfo[i].is_current === false) {
+                setGW(gwInfo[i].id);
+                break;
+            }
+        }
+    }, [gwInfo]);
 
     useEffect(() => {
         if (players.length > 0) {
@@ -67,7 +78,8 @@ export default function MainBody() {
                 player.position = position;
                 
             }); 
-            const filteredPlayers = players.filter(player => player.chance_of_playing_next_round === 100 && player.ep_next>6);
+            const filteredPlayers = players.filter(player => player.chance_of_playing_next_round === 100 && player.ep_next>5);
+            console.log(filteredPlayers)
             setFilteredPlayers(filteredPlayers);
             // console.log(filteredPlayers[25]);
             // console.log(filteredPlayers[1]);
@@ -237,6 +249,11 @@ export default function MainBody() {
 
     //nextFour[1].map((fixture, index) => (console.log("++", fixture)));
     
+    console.log("Players----", players);
+    console.log(gwInfo);
+    console.log(GW);
+
+
     return (
     <div className="container mx-auto py-8">
         <h2 className="text-2xl font-bold mb-4">Fantasy Premier League Players</h2>
@@ -257,15 +274,15 @@ export default function MainBody() {
                 </button>
             </div>
             {showEnterPlayer && (
-                <ShowPlayers players= {players} gwFixtures={gwFixtures} nextFour ={nextFour}/>
+                <ShowPlayers GW = {GW} players= {players} gwFixtures={gwFixtures} nextFour ={nextFour}/>
             )}
 
             {/* function TopPlayers({ filteredPlayers, gwFixtures, nextFour }) */}
            {showTopPlayers ? (
-            <TopPlayers filteredPlayers={filteredPlayers} gwFixtures={gwFixtures} nextFour={nextFour} />
+            <TopPlayers GW = {GW} filteredPlayers={filteredPlayers} gwFixtures={gwFixtures} nextFour={nextFour} />
            ): null}
            {showTeams ? (
-           <ShowTeam nextFour = {nextFour} gwFixtures={gwFixtures} />
+           <ShowTeam GW = {GW} nextFour = {nextFour} gwFixtures={gwFixtures} />
            ) : null}
     </div>
     );

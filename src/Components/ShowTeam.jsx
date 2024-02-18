@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import ListElement from './ListElement';
 import DisplayFixtures from './DisplayFixtures';
-import { teamMapping, GW } from '../data';
+import { teamMapping } from '../data';
 
-export default function ShowTeam({ nextFour, gwFixtures }) {
+export default function ShowTeam({ GW, nextFour, gwFixtures }) {
     const [arrayUsed, setArrayUsed] = useState([]);
 
 //I NEED TO SORT!!!
@@ -42,7 +42,7 @@ export default function ShowTeam({ nextFour, gwFixtures }) {
 
       }
       console.log("Area of interest", nextFour);
-      nextFour[12].map((fixtures, index) => (console.log(fixtures)));
+    //   nextFour[12].map((fixtures, index) => (console.log(fixtures)));
 
     //   homes.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
 
@@ -56,6 +56,7 @@ export default function ShowTeam({ nextFour, gwFixtures }) {
                         <th className="px-4 py-2">Name</th>
                         <th className="px-4 py-2">GW {GW}</th>
                         <th className="px-4 py-2">Next 4 Gameweeks</th>
+                   
                         <th className="px-4 py-2">Avg Difficulty
                         
                 </th>
